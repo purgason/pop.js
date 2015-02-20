@@ -1,3 +1,10 @@
+/*!
+ * pop.js
+ * https://github.com/purgason/pop.js
+ *
+ * Copyright 2015 David Purgason
+ * Released under the MIT license
+ */
 var popNamespace = {};
 popNamespace.popframe = [
     '<div id="pop-holder" class="pop-holder">',
