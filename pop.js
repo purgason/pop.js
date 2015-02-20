@@ -5,7 +5,12 @@
  * Copyright 2015 David Purgason
  * Released under the MIT license
  */
+
 var popNamespace = {};
+var dfltOptions = {};
+popNamespace.offX;
+popNamespace.offY;
+popNamespace.movePop;
 popNamespace.popframe = [
     '<div id="pop-holder" class="pop-holder">',
     '<div class="pop-shell">',
@@ -22,16 +27,19 @@ popNamespace.popframe = [
     '</div>',
     '<div class="modalbg"></div>'
 ].join('');
-
 document.write(popNamespace.popframe);
+
+// Basic Options Popup function
 function simplePopup(optObj, callback) {
+    
     //Set defaults for pop up
     $(".pop-shell").css({width: "0px", height: "0px"});
     popNamespace.popHeight = 0;
     popNamespace.popWidth = 0;
-    var dfltOptions = {
+    dfltOptions = {
         'shrink-in':true,
-        'slide-out':true,
+        'slide-in': false,
+        'slide-out':false,
         'btn-style':'none', 
         'round-corners':'true', 
         'head-align':'center', 
@@ -40,10 +48,10 @@ function simplePopup(optObj, callback) {
         'header-bg-shade':false,
         'footer-bg-shade':false,
         'dragable':true, 
-        'pop-title':'', 
-        'pop-body':'',
+        'pop-title':'Title Here', 
+        'pop-body':'Body Content Here',
+        'btn-text':'OK',
         'auto-break': -1,
-        'btn-text':'',
         'click-fn': function(){}
     };
 
@@ -83,6 +91,9 @@ function simplePopup(optObj, callback) {
     if (optObj['shrink-in']===false || optObj['shrink-in']===true) {
         dfltOptions['shrink-in'] = optObj['shrink-in'];
     }
+    if (optObj['slide-in']===false || optObj['slide-in']===true) {
+        dfltOptions['slide-in'] = optObj['slide-in'];
+    }
     if (optObj['slide-out']===false || optObj['slide-out']===true) {
         dfltOptions['slide-out'] = optObj['slide-out'];
     }
@@ -104,25 +115,9 @@ function simplePopup(optObj, callback) {
 
     // Auto add break tags to the body text
     if (dfltOptions['auto-break']!==-1) {
-        popNamespace.tempBody = dfltOptions['pop-body'].replace(/(<br>|\s+)/g, ' ');
-        popNamespace.bodyLen = popNamespace.tempBody.length;
-        popNamespace.breakat = dfltOptions['auto-break'];
-
-        var bodyArr = popNamespace.tempBody.split(' ');
-        var newBodyArr = [];
-        var tempString = "";
-        bodyArr.forEach(function(item) {
-            if (tempString.length<popNamespace.breakat) {
-                if (tempString.length>0) {tempString += " ";}
-                tempString += item;
-            } else {
-                newBodyArr.push(tempString);
-                tempString = item;
-            }
-        });
-        newBodyArr.push(tempString);
-        console.log(newBodyArr.join('<br>'));
-        dfltOptions['pop-body'] = newBodyArr.join('<br>');
+        if (!dfltOptions['pop-body'].match(/<.+?>/g)) {
+            dfltOptions['pop-body'] = ['<div class="pop-text-wrapper">', breakText(dfltOptions['pop-body'],dfltOptions['auto-break']), '</div>'].join('');
+        }
     }
     
     // Clear any added class objects
@@ -134,7 +129,11 @@ function simplePopup(optObj, callback) {
     
     // Set dragable option
     if(dfltOptions['dragable']) {
-        addListeners();
+        popNamespace.moveHandle = document.getElementById('pop-head');
+        popNamespace.moveHandle.style.cursor = "move";
+        popNamespace.movePop = document.getElementById('pop-holder');
+        popNamespace.moveHandle.addEventListener('mousedown', mouseDown, false);
+        window.addEventListener('mouseup', mouseUp, false);
     }
     
     // Add optional/default class styles
@@ -142,31 +141,17 @@ function simplePopup(optObj, callback) {
         $(".pop-data-foot").html('<div tabindex="1" class="pop-dismiss-txt-btn"></div>');
         $(".pop-dismiss-txt-btn").html(dfltOptions['btn-text']);
         $(".pop-dismiss-txt-btn").addClass(("btn-style-" + dfltOptions['btn-style']));
+        // bind click event to text-only dismiss button
         $(".pop-dismiss-txt-btn").click(function() {
-            if (dfltOptions['slide-out']) {
-                $(".pop-holder").fadeOut(150).animate({
-                    top: (($(window).height()/2)-($(".pop-shell").height()/2) + popNamespace.scrollOSY) + 100 + "px"
-                },{duration: 150, queue: false});
-            } else {
-                $(".pop-holder").fadeOut(150);
-            }
-            $(".modalbg").fadeOut(150);
-            dfltOptions['click-fn']();
+            exitFn();
         });
     } else {
         $(".pop-data-foot").html('<button tabindex="1" class="pop-dismiss-btn" value="ok">OK</button>');
         $(".pop-dismiss-btn").html(dfltOptions['btn-text']);
         $(".pop-dismiss-btn").addClass(("btn-style-" + dfltOptions['btn-style']));
+        // bind click event to dismiss button
         $(".pop-dismiss-btn").click(function() {
-            if (dfltOptions['slide-out']) {
-                $(".pop-holder").fadeOut(150).animate({
-                    top: (($(window).height()/2)-($(".pop-shell").height()/2) + popNamespace.scrollOSY) + 100 + "px"
-                },{duration: 150, queue: false});
-            } else {
-                $(".pop-holder").fadeOut(150);
-            }
-            $(".modalbg").fadeOut(150);
-            dfltOptions['click-fn']();
+            exitFn();
         });
     }
     if (dfltOptions['round-corners']) {
@@ -189,6 +174,7 @@ function simplePopup(optObj, callback) {
         popNamespace.scrollOSY = $(document).scrollTop();
         $(".pop-holder").css({left: (($(window).width()/2)-($(".pop-shell").width()/2) + popNamespace.scrollOSX) + "px"});
         $(".pop-holder").css({top: (($(window).height()/2)-($(".pop-shell").height()/2) + popNamespace.scrollOSY) + "px"});
+        $(".modalbg").css({top: popNamespace.scrollOSY + "px", left: popNamespace.scrollOSX + "px"});
     }); 
     assignPopEvent("scroll", false, function(){
         popNamespace.scrollOSX = $(document).scrollLeft();
@@ -206,9 +192,18 @@ function simplePopup(optObj, callback) {
     $(".pop-holder").css({visibility: "visible", display: "none"});
     $(".pop-holder").css({left: (($(window).width()/2)-((popNamespace.popWidth)/2) + popNamespace.scrollOSX) + "px"});
     $(".pop-holder").css({top: (($(window).height()/2)-((popNamespace.popHeight)/2) + popNamespace.scrollOSY) + "px"});
-
+    $(".modalbg").css({top: popNamespace.scrollOSY + "px", left: popNamespace.scrollOSX + "px"});
+    
     // Make popup visible
-    $(".pop-holder").fadeIn(150);
+    if (dfltOptions['slide-in']) {
+        $(".pop-holder").css({top: (($(window).height()/2)-($(".pop-shell").height()/2) + popNamespace.scrollOSY) + 50 + "px"});
+        $(".pop-holder").fadeIn(150).animate({
+            top: (($(window).height()/2)-($(".pop-shell").height()/2) + popNamespace.scrollOSY) + "px"
+        },{duration: 150, queue: false});
+    } else {
+        $(".pop-holder").fadeIn(150);
+    }
+
     if (dfltOptions['shrink-in']===true) {
         $(".pop-shell").css({width: (popNamespace.popWidth + 30)+"px",height: (popNamespace.popHeight + 30)+"px"});
         $(".pop-shell").animate({
@@ -229,6 +224,28 @@ function simplePopup(optObj, callback) {
     if(callback) {callback();}
 }
 
+function breakText(bodyText, breakLength) {
+    console.log("Entered breakText");
+    popNamespace.tempBody = bodyText.replace(/\s+/gm, ' ');
+    popNamespace.bodyLen = popNamespace.tempBody.length;
+    popNamespace.breakat = breakLength;
+
+    var bodyArr = popNamespace.tempBody.split(' ');
+    var newBodyArr = [];
+    var tempString = "";
+    bodyArr.forEach(function(item) {
+        if (tempString.length<popNamespace.breakat) {
+            if (tempString.length>0) {tempString += " ";}
+            tempString += item;
+        } else {
+            newBodyArr.push(tempString);
+            tempString = item;
+        }
+    });
+    newBodyArr.push(tempString);
+    return newBodyArr.join('<br>');
+}
+
 function assignPopEvent(event, useCap, func) {
     useCap = useCap ? useCap : false;
     if (window.addEventListener) {
@@ -237,18 +254,6 @@ function assignPopEvent(event, useCap, func) {
     else {
         window.attachEvent("on"+event, func);
     }
-}
-
-popNamespace.offX;
-popNamespace.offY;
-popNamespace.movePop;
-
-function addListeners() {
-    popNamespace.moveHandle = document.getElementById('pop-head');
-    popNamespace.moveHandle.style.cursor = "move";
-    popNamespace.movePop = document.getElementById('pop-holder');
-    popNamespace.moveHandle.addEventListener('mousedown', mouseDown, false);
-    window.addEventListener('mouseup', mouseUp, false);
 }
 
 function mouseUp() {
@@ -264,4 +269,20 @@ function mouseDown(e) {
 function divMove(e) {
     popNamespace.movePop.style.top = (e.clientY-popNamespace.offY) + 'px';
     popNamespace.movePop.style.left = (e.clientX-popNamespace.offX) + 'px';
+}
+
+function exitFn(customExit) {
+    if (dfltOptions['slide-out']) {
+        $(".pop-holder").fadeOut(150).animate({
+            top: (($(window).height()/2)-($(".pop-shell").height()/2) + popNamespace.scrollOSY) + 100 + "px"
+        },{duration: 150, queue: false});
+    } else {
+        $(".pop-holder").fadeOut(150);
+    }
+    $(".modalbg").fadeOut(150);
+    if (customExit) {
+        customExit();
+    } else {
+        dfltOptions['click-fn']();
+    }
 }
