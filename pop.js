@@ -8,9 +8,6 @@
 
 var popNamespace = {};
 var dfltOptions = {};
-popNamespace.offX;
-popNamespace.offY;
-popNamespace.movePop;
 popNamespace.popframe = [
     '<div id="pop-holder" class="pop-holder">',
     '<div class="pop-shell">',
@@ -31,29 +28,31 @@ document.write(popNamespace.popframe);
 
 // Basic Options Popup function
 function simplePopup(optObj, callback) {
-    
     //Set defaults for pop up
     $(".pop-shell").css({width: "0px", height: "0px"});
     popNamespace.popHeight = 0;
     popNamespace.popWidth = 0;
-    dfltOptions = {
-        'shrink-in':true,
+    dfltOptions =  {
+        'shrink-in': true,
         'slide-in': false,
-        'slide-out':false,
-        'btn-style':'none', 
-        'round-corners':'true', 
-        'head-align':'center', 
-        'body-align':'center', 
-        'foot-align':'center', 
-        'header-bg-shade':false,
-        'footer-bg-shade':false,
-        'dragable':true, 
-        'pop-title':'Title Here', 
-        'pop-body':'Body Content Here',
-        'btn-text':'OK',
+        'slide-out': false,
+        'btn-style': 'none',
+        'round-corners': 'true',
+        'head-align': 'center',
+        'body-align': 'center',
+        'foot-align': 'center',
+        'header-bg-shade': false,
+        'footer-bg-shade': false,
+        'dragable': true,
+        'pop-title': 'Title Here',
+        'pop-body': 'Body Content Here',
+        'btn-text': 'OK',
         'auto-break': -1,
-        'click-fn': function(){}
+        'click-fn': function () {}
     };
+    if (!optObj) {
+        optObj = {};
+    }
 
     // Adjust defaults for passed options
     if (optObj['btn-style']) {
@@ -97,8 +96,8 @@ function simplePopup(optObj, callback) {
     if (optObj['slide-out']===false || optObj['slide-out']===true) {
         dfltOptions['slide-out'] = optObj['slide-out'];
     }
-    if (optObj['dragable']===false || optObj['dragable']===true) {
-        dfltOptions['dragable'] = optObj['dragable'];
+    if (optObj.dragable===false || optObj.dragable===true) {
+        dfltOptions.dragable = optObj.dragable;
     }
     if (optObj['click-fn']) {
         dfltOptions['click-fn'] = optObj['click-fn'];
@@ -119,23 +118,26 @@ function simplePopup(optObj, callback) {
             dfltOptions['pop-body'] = ['<div class="pop-text-wrapper">', breakText(dfltOptions['pop-body'],dfltOptions['auto-break']), '</div>'].join('');
         }
     }
-    
+
     // Clear any added class objects
-    $(".pop-dismiss-btn").removeClass("btn-style-error btn-style-success btn-style-primary");
     $(".pop-shell").removeClass("corner-style-round-all");
-    $(".pop-data-head").removeClass("corner-style-round-tops head-align-center header-bg-shade-true header-bg-shade-false");
-    $(".pop-data-foot").removeClass("corner-style-round-btms foot-align-center foot-align-right footer-bg-shade-true footer-bg-shade-false");
+    $(".pop-head").removeClass("head-align-left head-align-center head-align-right");
+    $(".pop-bod").removeClass("body-align-left body-align-center body-align-right");
+    $(".pop-foot").removeClass("foot-align-left foot-align-center foot-align-right");
+    $(".pop-data-head").removeClass("corner-style-round-tops header-bg-shade-true header-bg-shade-false");
     $(".pop-data-cell").removeClass("body-align-center body-align-right");
-    
+    $(".pop-data-foot").removeClass("corner-style-round-btms footer-bg-shade-true footer-bg-shade-false");
+    $(".pop-dismiss-btn").removeClass("btn-style-error btn-style-success btn-style-primary");
+
     // Set dragable option
-    if(dfltOptions['dragable']) {
+    if(dfltOptions.dragable) {
         popNamespace.moveHandle = document.getElementById('pop-head');
         popNamespace.moveHandle.style.cursor = "move";
         popNamespace.movePop = document.getElementById('pop-holder');
         popNamespace.moveHandle.addEventListener('mousedown', mouseDown, false);
         window.addEventListener('mouseup', mouseUp, false);
     }
-    
+
     // Add optional/default class styles
     if(dfltOptions['btn-style']==='none') {
         $(".pop-data-foot").html('<div tabindex="1" class="pop-dismiss-txt-btn"></div>');
@@ -167,7 +169,7 @@ function simplePopup(optObj, callback) {
     $(".pop-foot").addClass(("foot-align-"+dfltOptions['foot-align']));
     $(".pop-data-head").html(dfltOptions['pop-title']);
     $(".pop-data-cell").html(dfltOptions['pop-body']);
-    
+
     // Position popup at center of window
     assignPopEvent("resize", false, function(){
         popNamespace.scrollOSX = $(document).scrollLeft();
@@ -193,7 +195,7 @@ function simplePopup(optObj, callback) {
     $(".pop-holder").css({left: (($(window).width()/2)-((popNamespace.popWidth)/2) + popNamespace.scrollOSX) + "px"});
     $(".pop-holder").css({top: (($(window).height()/2)-((popNamespace.popHeight)/2) + popNamespace.scrollOSY) + "px"});
     $(".modalbg").css({top: popNamespace.scrollOSY + "px", left: popNamespace.scrollOSX + "px"});
-    
+
     // Make popup visible
     if (dfltOptions['slide-in']) {
         $(".pop-holder").css({top: (($(window).height()/2)-($(".pop-shell").height()/2) + popNamespace.scrollOSY) + 50 + "px"});
@@ -225,7 +227,6 @@ function simplePopup(optObj, callback) {
 }
 
 function breakText(bodyText, breakLength) {
-    console.log("Entered breakText");
     popNamespace.tempBody = bodyText.replace(/\s+/gm, ' ');
     popNamespace.bodyLen = popNamespace.tempBody.length;
     popNamespace.breakat = breakLength;
