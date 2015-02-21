@@ -1,0 +1,14 @@
+{
+  "name": "node-static-server",
+  "version": "1.0.0",
+  "description": "Static file server powered by Node",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Martin",
+  "license": "MIT",
+  "dependencies": {
+    "express": "~4.10.1"
+  }
+}

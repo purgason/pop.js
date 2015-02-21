@@ -18,6 +18,18 @@ simplePopup({
     'btn-text': 'Dismiss'
 });
 ```
+
+## Example Server
+To run the example server with the provided example page, perform the following steps:
+
+1. Ensure that you have [`node.js`](http://nodejs.org) or [`io.js`](https://iojs.org) installed on your system.
+1. Clone the pop.js repository.
+1. Open a terminal and cd to the `example` directory.
+1. Run `npm install`.
+1. Run `node app`.
+1. Copy `pop.min.js` and `pop.min.css` to the `example/public/` directory.
+1. Open your browser and point it to [`localhost:3000`](http://localhost:3000).
+
 ##Options
 A full range of option are available in order to customize the 
 popup's look and feel.  Below is a full list of optional object literals
