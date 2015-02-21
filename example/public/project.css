@@ -1,0 +1,16 @@
+.project-header {
+    display: block; 
+    font-size: 50px; 
+    font-weight: bold;
+    width: 100%; 
+    box-sizing: border-box; 
+    text-align: center;
+}
+
+.opt-defs {
+    font-size: 20px; 
+    font-weight: bold;
+    background-color: #606060;
+    color: #ffffff;
+    padding: 3px;
+}
