@@ -11,6 +11,7 @@
     </head>
     <body>
         <div class="container">
+            <div class="panel" style="text-align:center;"><img width="200px" src="pop-logo.jpg" /></div>
             <div class="well">
                 <div class="panel project-header">pop.js</div>
                 <span style="font-size:18px;font-weight:bold;">pop.js</span>, 
@@ -30,11 +31,10 @@
                 Source Code:<br>
 <pre>$("#defautdemo").click(function() {
     simplePopup({
-        'pop-title': 'Pop Default Demo',
-         'pop-body': 'This is a demonstration of a simple popup.&lt;br&gt;
-                      The point is to present information to the&lt;br&gt;
-                      user and provide a way to dismiss the popup.', 
-         'btn-text': 'Dismiss'
+        'pop-title':'Pop Demo', 
+        'pop-body': 'This is a demonstration of a simple popup. The point is to present information to the user and provide a way to dismiss the popup.', 
+        'btn-text': 'Dismiss',
+        'auto-wrap': 35,
     });
 });</pre>
                 <button id="defaultdemo" type="button" class="btn btn-primary">Default Pop Up Demo</button>
@@ -58,7 +58,7 @@
  * header-bg-shade: [ <b>true</b> | false ]
  * footer-bg-shade: [ true | <b>false</b> ]
  * dragable:        [ <b>true</b> | false ]
- * auto-break:      [ <b>-1</b> | integer ]
+ * auto-wrap:       [ <b>-1</b> | integer ]
  * pop-title:       {String}
  * pop-body:        {String}
  * btn-text:        {String}
