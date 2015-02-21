@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="pop.min.css">
+        <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="project.css">
+        <script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+        <script type="text/javascript" src="pop.min.js"></script>
+        <script type="text/javascript" src="project.js"></script>
+        <script type="text/javascript" src="bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="well">
+                <div class="panel project-header">pop.js</div>
+                <span style="font-size:18px;font-weight:bold;">pop.js</span>, 
+                is a simple to implement, option-based, jQuery dependent, client-side 
+                Javascript library. The Library is designed to allow the developer to 
+                simply reference the pop.js file and accompanying pop.css file in their 
+                project, then call a simple function and pass an options object in JSON 
+                format. pop.js is a powerful way to deliver highly customizable popup 
+                notifications to the end user.
+            </div>
+            <div class="well">
+                Below is an example of the simplest use case, utilizing 
+                default values for all of the built-in options.
+                Simply add a title, body content, and the text to be 
+                displayed in the dismissal button and the rest is done for you.<br>
+                <br>
+                Source Code:<br>
+<pre>$("#defautdemo").click(function() {
+    simplePopup({
+        'pop-title': 'Pop Default Demo',
+         'pop-body': 'This is a demonstration of a simple popup.&lt;br&gt;
+                      The point is to present information to the&lt;br&gt;
+                      user and provide a way to dismiss the popup.', 
+         'btn-text': 'Dismiss'
+    });
+});</pre>
+                <button id="defaultdemo" type="button" class="btn btn-primary">Default Pop Up Demo</button>
+                <br>
+            </div>
+            <div class="well">
+                <br>
+                <div class="panel opt-defs">Options</div>
+                A full range of option are available in order to customize the 
+                popup's look and feel.  Below is a full list of options as related
+                to their object literals:<br><br>
+            <pre> AVAILABLE OPTIONS (defaults highlighted)
+ * shrink-in:       [ <b>true</b> | false ]
+ * slide-in:        [ <b>true</b> | false ]
+ * slide-out:       [ <b>true</b> | false ]
+ * btn-style:       [ <b>'primary'</b> | 'error' | 'success' | 'default' | 'none' ]
+ * round-corners:   [ <b>true</b> | false ]
+ * head-align:      [ 'left' | <b>'center'</b> | 'right' ]
+ * body-align:      [ 'left' | <b>'center'</b> | 'right' ]
+ * foot-align:      [ 'left' | <b>'center'</b> | 'right' ]
+ * header-bg-shade: [ <b>true</b> | false ]
+ * footer-bg-shade: [ true | <b>false</b> ]
+ * dragable:        [ <b>true</b> | false ]
+ * auto-break:      [ <b>-1</b> | integer ]
+ * pop-title:       {String}
+ * pop-body:        {String}
+ * btn-text:        {String}
+ * click-fn:        {function}
+</pre>
+                <br>
+                <div class="panel opt-defs">Option Definitions</div>
+                <ul>
+                    <li>
+                        <u><b>shrink-in</b></u><br>
+                        This option, when set to true, causes the popup to shrink 
+                        slightly while fading in.  
+                    </li>
+                    <li>
+                        <u><b>slide-in</b></u><br>
+                        This option, when set to true, causes the popup to slide upward 
+                        slightly while fading in.  
+                    </li>
+                    <li>
+                        <u><b>slide-out</b></u><br>
+                        This option, when set to true, causes the popup to slide downward 
+                        slightly while fading out.  
+                    </li>
+                    <li>
+                        <u><b>btn-style</b></u><br>
+                        This option allows a choice between four different color
+                        schemes (primary=blue, error=red, success=green, default=grey) 
+                        for the dismissal button as well as a fifth option
+                        (none) where no "button" is displayed but the entire popup footer
+                        becomes the button.
+                    </li>
+                    <li>
+                        <u><b>round-corners</b></u><br>
+                        This option, when set to true, causes the popup to have rounded corners.  
+                    </li>
+                    <li>
+                        <u><b>head-align</b></u><br>
+                        This option aligns the contents of the header bar to the setting designated - left, center, or right.  
+                    </li>
+                    <li>
+                        <u><b>body-align</b></u><br>
+                        This option aligns the contents of the popup body to the setting designated - left, center, or right.  
+                    </li>
+                    <li>
+                        <u><b>foot-align</b></u><br>
+                        This option aligns the contents of the footer bar to the setting designated - left, center, or right.  
+                    </li>
+                    <li>
+                        <u><b>header-bg-shade</b></u><br>
+                        This option toggles a shaded background on the header bar.  
+                    </li>
+                    <li>
+                        <u><b>footer-bg-shade</b></u><br>
+                        This option toggles a shaded background on the footer bar.  
+                    </li>
+                    <li>
+                        <u><b>dragable</b></u><br>
+                        This option, when set to true, allows the popup to be dragged by the header bar to a new position.  
+                    </li>
+                    <li>
+                        <u><b>auto-break</b></u><br>
+                        This option, by setting the value to a positive integer, modifies the text supplied in the 'pop-body' so that it word wraps at the first white space after the count of characters equal to the supplied integer.  This option only applys to text only content. Content containing hypertext markup will be inserted as-is.  
+                    </li>
+                    <li>
+                        <u><b>click-fn</b></u><br>
+                        The 'click-fn' (click function) option can be defined in the 
+                        options object for a custom action to occur at popup dismissal. 
+                        This can be handled in one of two ways:<br>
+                        <ol>
+                            <li>Anonymous Function</li>
+                            <pre>'click-fn': function() { some code here;} </pre>
+                            <li>Named Function</li>
+                            <pre>'click-fn': doThatThing <span style="color: #8c8c8c;">// where 'doThatThing' is a valid function</span></pre>
+                        </ol>
+                    </li>
+                </ul>
+                Below is a demo of a customized popup using the options discussed above.<br>
+                <br>
+                Source Code:<br>
+            <pre>$("#customdemo").click(function() {
+    simplePopup({
+        'shrink-in':true,
+        'slide-in':true,
+        'slide-out':true,
+        'btn-style':'success', 
+        'round-corners':true, 
+        'head-align':'center', 
+        'body-align':'center', 
+        'foot-align':'right', 
+        'header-bg-shade':false,
+        'footer-bg-shade':true,
+        'dragable':true, 
+        'auto-break': 25,
+        'pop-title':'Pop Custom Demo', 
+        'pop-body':'This is a demonstration of a customized
+                    popup. Notice the differences in style
+                    and presentation.', 
+        'btn-text':'Dismiss',
+        'click-fn':sampleExitTask
+    });
+});</pre>
+                <button id="customdemo" type="button" class="btn btn-primary">Custom Pop Up Demo</button>
+                <br><br>
+                <div class="panel" style="display:none;" id="exitTaskOutput"></div>
+            </div>
+        </div>
+    </body>
+</html>
