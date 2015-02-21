@@ -4,7 +4,8 @@ $(document).ready(function(){
             'pop-title':'Pop Demo', 
             'pop-body':'This is a demonstration of a simple popup. The point is to present information to the user and provide a way to dismiss the popup.', 
             'btn-text':'Dismiss',
-            'auto-break': 25,
+            'body-align':'left',
+            'auto-break': 35,
         });
     });
     $("#customdemo").click(function() {
@@ -20,7 +21,7 @@ $(document).ready(function(){
             'header-bg-shade':true,
             'footer-bg-shade':false,
             'dragable':true, 
-            'auto-break': 25,
+            'auto-break': 35,
             'pop-title':'Pop Demo', 
             'pop-body':'This is a demonstration of a customized popup. Notice the differences in style and presentation.', 
             'btn-text':'Dismiss',
